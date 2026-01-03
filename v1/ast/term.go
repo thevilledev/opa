@@ -1895,7 +1895,7 @@ func (s *set) Foreach(f func(*Term)) {
 // Map returns a new Set obtained by applying f to each value in s.
 func (s *set) Map(f func(*Term) (*Term, error)) (Set, error) {
 	mapped := make([]*Term, 0, len(s.keys))
-	for _, x := range s.sortedKeys() {
+	for _, x := range s.keys {
 		term, err := f(x)
 		if err != nil {
 			return nil, err

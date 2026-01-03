@@ -977,3 +977,24 @@ func BenchmarkCountUnescapedLeftCurly(b *testing.B) {
 		})
 	}
 }
+
+func BenchmarkSetMap(b *testing.B) {
+	sizes := []int{5, 50, 500, 5000, 50000}
+	for _, size := range sizes {
+		b.Run(fmt.Sprintf("size=%d", size), func(b *testing.B) {
+			set := NewSet()
+			for i := range size {
+				set.Add(IntNumberTerm(i))
+			}
+			// Simple function that transforms each number
+			mapFn := func(t *Term) (*Term, error) {
+				n, _ := t.Value.(Number).Int()
+				return IntNumberTerm(n + 1), nil
+			}
+			b.ResetTimer()
+			for b.Loop() {
+				_, _ = set.Map(mapFn)
+			}
+		})
+	}
+}

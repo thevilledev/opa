@@ -81,13 +81,13 @@ func builtinNumbersRangeStep(bctx BuiltinContext, operands []*ast.Term, iter fun
 }
 
 func canGenerateCheapRange(operands []*ast.Term) bool {
-	x, err := builtins.IntOperand(operands[0].Value, 1)
-	if err != nil || !ast.HasInternedIntNumberTerm(x) {
+	_, err := builtins.IntOperand(operands[0].Value, 1)
+	if err != nil {
 		return false
 	}
 
-	y, err := builtins.IntOperand(operands[1].Value, 2)
-	if err != nil || !ast.HasInternedIntNumberTerm(y) {
+	_, err = builtins.IntOperand(operands[1].Value, 2)
+	if err != nil {
 		return false
 	}
 
@@ -116,7 +116,14 @@ func generateCheapRange(operands []*ast.Term, step int, iter func(*ast.Term) err
 		return err
 	}
 
-	terms := make([]*ast.Term, 0, y+1)
+	var cap int
+	if x <= y {
+		cap = (y-x)/step + 1
+	} else {
+		cap = (x-y)/step + 1
+	}
+
+	terms := make([]*ast.Term, 0, cap)
 
 	if x <= y {
 		for i := x; i <= y; i += step {

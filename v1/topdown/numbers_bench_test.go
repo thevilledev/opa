@@ -24,6 +24,10 @@ func BenchmarkNumbersRange(b *testing.B) {
 			name:     "not interned",
 			operands: []*ast.Term{ast.IntNumberTerm(1000), ast.IntNumberTerm(1099)},
 		},
+		{
+			name:     "large start",
+			operands: []*ast.Term{ast.IntNumberTerm(1000000), ast.IntNumberTerm(1000099)},
+		},
 	}
 
 	for _, test := range tests {
